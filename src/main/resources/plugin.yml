@@ -1,0 +1,9 @@
+main: me.spikey.newplayercommand.Main
+
+name: SpikeyNewPlayerCommand
+version: 1.0
+api-version: 1.13
+author: SpikeyNoob
+
+commands:
+  NPCReset:

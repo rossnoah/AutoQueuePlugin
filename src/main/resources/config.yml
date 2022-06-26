@@ -1,0 +1,2 @@
+#command to run on first join, %s is replaced with player name
+command: say %s has joined for the first time!
