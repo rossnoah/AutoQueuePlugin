@@ -1,9 +1,18 @@
 main: me.spikey.newplayercommand.Main
 
-name: SpikeyNewPlayerCommand
+name: AutoQueuePlugin
 version: 1.0
 api-version: 1.13
-author: SpikeyNoob
+author: SpikeyNoob, PhoenixZT
 
 commands:
-  NPCReset:
+  removeautoqueue:
+    permission: autoqueue.staff
+    aliases:
+  #    - removeautorequeue
+  #    - removeautojoin
+  autoqueue:
+    permission: autoqueue.command
+    aliases:
+  #    - autorequeue
+  #    - autojoin

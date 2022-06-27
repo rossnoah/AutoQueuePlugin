@@ -16,7 +16,7 @@ public class DAO {
             Class.forName("org.sqlite.JDBC");
 
             String query = """
-                    SELECT * FROM hasjoined WHERE uuid=?;
+                    SELECT * FROM autoqueue WHERE uuid=?;
                     """;
             PreparedStatement statement = connection.prepareStatement(query);
 
@@ -34,13 +34,13 @@ public class DAO {
         return false;
     }
 
-    public static void removeJoin(Connection connection, UUID uuid) {
+    public static void removeAutoJoin(Connection connection, UUID uuid) {
         PreparedStatement statement = null;
 
         try {
             Class.forName("org.sqlite.JDBC");
             String query = """
-                    DELETE FROM hasjoined WHERE uuid=?;
+                    DELETE FROM autoqueue WHERE uuid=?;
                     """;
             statement = connection.prepareStatement(query);
             statement.setString(1, UUIDUtils.strip(uuid));
@@ -53,13 +53,13 @@ public class DAO {
         }
     }
 
-    public static void addJoin(Connection connection, UUID uuid) {
+    public static void addAutoJoin(Connection connection, UUID uuid) {
         PreparedStatement statement = null;
 
         try {
             Class.forName("org.sqlite.JDBC");
             String query = """
-                    INSERT INTO hasjoined (uuid) \
+                    INSERT INTO autoqueue (uuid) \
                     VALUES\
                     (?);
                     """;

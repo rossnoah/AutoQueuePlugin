@@ -1,10 +1,7 @@
 package me.spikey.newplayercommand;
 
-import com.google.common.collect.Lists;
 import me.spikey.newplayercommand.utils.SchedulerUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -15,7 +12,7 @@ import java.util.UUID;
 
 public class Main extends JavaPlugin implements Listener {
 
-    public ArrayList<UUID> hasJoinedCache;
+    public static ArrayList<UUID> hasJoinedCache;
     private static String command = "";
     @Override
     public void onEnable() {
@@ -25,22 +22,17 @@ public class Main extends JavaPlugin implements Listener {
 
         command = getConfig().getString("command");
 
-        hasJoinedCache = Lists.newArrayList();
-        getCommand("NPCReset").setExecutor(new ResetHadJoinedCommand(this));
+        getCommand("removeautoqueue").setExecutor(new RemoveAutoJoinCommand(this));
+        this.getCommand("autoqueue").setExecutor(new AutoQueueCommand());
+        this.getCommand("autoqueue").setTabCompleter(new AutoQueueTabCompleter());
         Bukkit.getPluginManager().registerEvents(this, this);
     }
 
     public void runCommandIfAllowed(UUID uuid) {
-        if (hasJoinedCache.contains(uuid)) return;
-
         SchedulerUtils.runDatabaseAsync((connection -> {
-            if (DAO.hasJoined(connection, uuid)) {
+            if (!DAO.hasJoined(connection, uuid)) {
                 return;
             }
-
-            DAO.addJoin(connection, uuid);
-            hasJoinedCache.add(uuid);
-            if (hasJoinedCache.size() > 200) hasJoinedCache.remove(0);
             SchedulerUtils.runSync(() -> {
                 String name = Bukkit.getPlayer(uuid).getName();
                 Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command.formatted(name));
@@ -50,6 +42,24 @@ public class Main extends JavaPlugin implements Listener {
 
     @EventHandler
     public void join(PlayerJoinEvent event) {
-        runCommandIfAllowed(event.getPlayer().getUniqueId());
+
+        SchedulerUtils.runLater(()->{
+            SchedulerUtils.runDatabaseAsync((connection -> {
+                if (!DAO.hasJoined(connection, event.getPlayer().getUniqueId())) {
+                    return;
+                }
+                SchedulerUtils.runSync(()->{
+                    event.getPlayer().sendMessage("§aAutoQueue will run in 15 seconds");
+                    event.getPlayer().sendMessage("Use §a/autoqueue§a off§r to disable this");
+
+                });
+            }));
+        },2*20);
+
+
+        SchedulerUtils.runLater(()->{
+            runCommandIfAllowed(event.getPlayer().getUniqueId());
+        },17*20);
     }
+
 }

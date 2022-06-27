@@ -42,7 +42,7 @@ public class DatabaseManager {
                     CREATE TABLE IF NOT EXISTS %s (\
                     uuid VARCHAR NOT NULL\
                     );
-                    """.formatted("hasjoined");
+                    """.formatted("autoqueue");
 
             statement.execute(query);
             statement.close();
