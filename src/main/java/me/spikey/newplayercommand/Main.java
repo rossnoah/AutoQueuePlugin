@@ -30,7 +30,7 @@ public class Main extends JavaPlugin implements Listener {
 
     public void runCommandIfAllowed(UUID uuid) {
         SchedulerUtils.runDatabaseAsync((connection -> {
-            if (!DAO.hasJoined(connection, uuid)) {
+            if (!DAO.hasAutoQueue(connection, uuid)) {
                 return;
             }
             SchedulerUtils.runSync(() -> {
@@ -45,7 +45,7 @@ public class Main extends JavaPlugin implements Listener {
 
         SchedulerUtils.runLater(()->{
             SchedulerUtils.runDatabaseAsync((connection -> {
-                if (!DAO.hasJoined(connection, event.getPlayer().getUniqueId())) {
+                if (!DAO.hasAutoQueue(connection, event.getPlayer().getUniqueId())) {
                     return;
                 }
                 SchedulerUtils.runSync(()->{
@@ -56,10 +56,30 @@ public class Main extends JavaPlugin implements Listener {
             }));
         },2*20);
 
+        long activationTime = System.currentTimeMillis()+(17*1000);
 
-        SchedulerUtils.runLater(()->{
-            runCommandIfAllowed(event.getPlayer().getUniqueId());
-        },17*20);
+
+            Bukkit.getScheduler().runTaskTimer(this,(task)->{
+
+            if(!event.getPlayer().isOnline()){
+                task.cancel();
+            }else{
+                if(System.currentTimeMillis()>activationTime){
+                    runCommandIfAllowed(event.getPlayer().getUniqueId());
+                    task.cancel();
+                }
+            }
+
+
+            },1,1l);
+
+
+
+
+
     }
+
+
+
 
 }

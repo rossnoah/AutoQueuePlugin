@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class DAO {
 
-    public static boolean hasJoined(Connection connection, UUID uuid) {
+    public static boolean hasAutoQueue(Connection connection, UUID uuid) {
 
         try {
             Class.forName("org.sqlite.JDBC");
@@ -34,7 +34,7 @@ public class DAO {
         return false;
     }
 
-    public static void removeAutoJoin(Connection connection, UUID uuid) {
+    public static void removeAutoQueue(Connection connection, UUID uuid) {
         PreparedStatement statement = null;
 
         try {
@@ -53,7 +53,7 @@ public class DAO {
         }
     }
 
-    public static void addAutoJoin(Connection connection, UUID uuid) {
+    public static void addAutoQueue(Connection connection, UUID uuid) {
         PreparedStatement statement = null;
 
         try {

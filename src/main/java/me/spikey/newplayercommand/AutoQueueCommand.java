@@ -32,7 +32,7 @@ public class AutoQueueCommand implements CommandExecutor {
 
 
             SchedulerUtils.runDatabaseAsync(connection -> {
-                DAO.addAutoJoin(connection, p.getUniqueId());
+                DAO.addAutoQueue(connection, p.getUniqueId());
                 SchedulerUtils.runSync(() -> {
                     p.sendMessage("§aAutoQueue has been enabled!");
                 });
@@ -45,8 +45,8 @@ public class AutoQueueCommand implements CommandExecutor {
         if(strings[0].equalsIgnoreCase("off")||strings[0].equalsIgnoreCase("disable")){
             SchedulerUtils.runDatabaseAsync((connection -> {
 
-                if (DAO.hasJoined(connection, uuid)) {
-                    DAO.removeAutoJoin(connection, uuid);
+                if (DAO.hasAutoQueue(connection, uuid)) {
+                    DAO.removeAutoQueue(connection, uuid);
                 }
                 SchedulerUtils.runSync(() -> {
                     p.sendMessage("§cAutoQueue has been disabled!");

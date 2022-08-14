@@ -31,7 +31,7 @@ public class RemoveAutoJoinCommand implements CommandExecutor {
             return true;
         }
         SchedulerUtils.runDatabaseAsync(connection -> {
-            DAO.removeAutoJoin(connection, offlinePlayer.getUniqueId());
+            DAO.removeAutoQueue(connection, offlinePlayer.getUniqueId());
             SchedulerUtils.runSync(() -> {
                 commandSender.sendMessage("§aDisabled AutoJoin for "+offlinePlayer.getName());
             });
